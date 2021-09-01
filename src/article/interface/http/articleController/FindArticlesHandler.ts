@@ -1,7 +1,8 @@
-import { FindArticles } from "@/article/query/FindArticles";
-import { handler } from "@/_lib/http/handler";
-import Joi from "types-joi";
-import { makePaginator } from "@/_lib/http/validation/Paginator";
+import Joi from 'types-joi';
+
+import { handler } from '@/_lib/http/handler';
+import { makePaginator } from '@/_lib/http/validation/Paginator';
+import { FindArticles } from '@/article/query/FindArticles';
 
 type Dependencies = {
   findArticles: FindArticles;

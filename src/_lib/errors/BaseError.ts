@@ -5,9 +5,12 @@ type Exception<M = any> = Readonly<{
   meta?: M;
 }>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class BaseError<M = any> extends Error implements Exception<M> {
   public readonly type: symbol;
+
   public readonly code: string;
+
   public readonly meta?: M;
 
   constructor(props: Exception<M>) {

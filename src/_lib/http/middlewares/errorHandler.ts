@@ -1,5 +1,6 @@
-import { ErrorRequestHandler } from "express";
-import { Exception } from "@/_lib/errors/BaseError";
+import { ErrorRequestHandler, Response } from 'express';
+
+import { Exception } from '@/_lib/errors/BaseError';
 
 type ErrorConverter<E extends Exception> = {
   test: (err: E | any) => err is E;
@@ -13,14 +14,16 @@ type ErrorConverterFn = <E extends Exception>(
 
 const errorConverter: ErrorConverterFn = (test, converter) => ({ test, converter });
 
-const makeErrorResponseBuilder = (errorConverters: ErrorConverter<any>[]) => (err: any) => {
-  const mapping = errorConverters.find((parser) => parser.test(err));
+const makeErrorResponseBuilder =
+  (errorConverters: ErrorConverter<any>[]) =>
+  (err: any): any => {
+    const mapping = errorConverters.find(parser => parser.test(err));
 
-  return mapping ? mapping.converter(err) : null;
-};
+    return mapping ? mapping.converter(err) : null;
+  };
 
 type ErrorHandlerOptions = {
-  logger: Pick<Console, "error">;
+  logger: Pick<Console, 'error'>;
 };
 
 const defaultOptions: ErrorHandlerOptions = {
@@ -34,7 +37,7 @@ const errorHandler = (
   const { logger } = { ...defaultOptions, ...options };
   const errorResponseBuilder = makeErrorResponseBuilder(errorMap);
 
-  return (err, req, res, next) => {
+  return (err, req, res, _): Response => {
     logger.error(err.stack);
 
     const errorResponse = errorResponseBuilder(err);
@@ -42,10 +45,10 @@ const errorHandler = (
     if (errorResponse) {
       const { status, body } = errorResponse;
 
-      return res.status(status).json(typeof body === "object" ? body : { error: body });
+      return res.status(status).json(typeof body === 'object' ? body : { error: body });
     }
 
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   };
 };
 

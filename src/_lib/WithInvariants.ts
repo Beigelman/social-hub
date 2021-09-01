@@ -1,5 +1,6 @@
-import { AggregateRoot } from "@/_lib/DDD";
-import assertFn from "assert";
+import assertFn from 'assert';
+
+import { AggregateRoot } from '@/_lib/DDD';
 
 type AssertionFn = (value: any, message?: string | Error) => void;
 

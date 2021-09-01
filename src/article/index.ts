@@ -1,21 +1,22 @@
-import { asFunction } from "awilix";
-import { CreateArticle, makeCreateArticle } from "@/article/application/useCases/CreateArticle";
-import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
-import { makePublishArticle, PublishArticle } from "@/article/application/useCases/PublishArticle";
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { ArticleCollection, initArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { makeMongoArticleRepository } from "@/article/infrastructure/MongoArticleRepository";
-import { makeArticleController } from "@/article/interface/http/articleController";
-import { FindArticles } from "@/article/query/FindArticles";
-import { withMongoProvider } from "@/_lib/MongoProvider";
-import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
-import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
-import { makeModule } from "@/context";
-import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
-import { articleMessages } from "@/article/messages";
+import { asFunction } from 'awilix';
+
+import { withMongoProvider } from '@/_lib/MongoProvider';
+import { toContainerValues } from '@/_lib/wrappers/toContainerFunctions';
+import { CreateArticle, makeCreateArticle } from '@/article/application/useCases/CreateArticle';
+import { DeleteArticle, makeDeleteArticle } from '@/article/application/useCases/DeleteArticle';
+import { makePublishArticle, PublishArticle } from '@/article/application/useCases/PublishArticle';
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { ArticleCollection, initArticleCollection } from '@/article/infrastructure/ArticleCollection';
+import { makeMongoArticleRepository } from '@/article/infrastructure/MongoArticleRepository';
+import { makeArticleCreatedEmailListener } from '@/article/interface/email/ArticleCreatedEmailListener';
+import { makeArticleController } from '@/article/interface/http/articleController';
+import { articleMessages } from '@/article/messages';
+import { FindArticles } from '@/article/query/FindArticles';
+import { makeMongoFindArticles } from '@/article/query/impl/MongoFindArticles';
+import { makeModule } from '@/context';
 
 const articleModule = makeModule(
-  "article",
+  'article',
   async ({ container: { register, build }, messageBundle: { updateBundle } }) => {
     const collections = await build(
       withMongoProvider({

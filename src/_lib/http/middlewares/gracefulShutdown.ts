@@ -1,6 +1,8 @@
-import { Server } from "http";
-import { logger } from "@/_lib/logger";
-import { RequestHandler } from "express";
+/* eslint-disable consistent-return */
+import { RequestHandler } from 'express';
+import { Server } from 'http';
+
+import { logger } from '@/_lib/logger';
 
 type ShutdownMiddleware = {
   shutdownHook: () => Promise<void>;
@@ -18,17 +20,17 @@ const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddlew
 
       shuttingDown = true;
 
-      logger.warn("Shutting down server");
+      logger.warn('Shutting down server');
 
       setTimeout(() => {
-        logger.error("Could not close connections in time, forcefully shutting down");
+        logger.error('Could not close connections in time, forcefully shutting down');
         resolve();
       }, forceTimeout).unref();
 
-      server.close((err) => {
+      server.close(err => {
         if (err) return reject(err);
 
-        logger.info("Closed out remaining connections.");
+        logger.info('Closed out remaining connections.');
         resolve();
       });
     });
@@ -39,8 +41,8 @@ const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddlew
         return next();
       }
 
-      res.set("Connection", "close");
-      res.status(503).send("Server is in the process of restarting.");
+      res.set('Connection', 'close');
+      res.status(503).send('Server is in the process of restarting.');
     },
     shutdownHook,
   };

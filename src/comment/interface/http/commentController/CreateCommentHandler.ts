@@ -1,7 +1,8 @@
-import { CreateComment } from "@/comment/application/useCases/CreateComment";
-import { makeValidator } from "@/_lib/http/validation/Validator";
-import { handler } from "@/_lib/http/handler";
-import Joi from "types-joi";
+import Joi from 'types-joi';
+
+import { handler } from '@/_lib/http/handler';
+import { makeValidator } from '@/_lib/http/validation/Validator';
+import { CreateComment } from '@/comment/application/useCases/CreateComment';
 
 type Dependencies = {
   createComment: CreateComment;

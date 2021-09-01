@@ -1,4 +1,5 @@
-import { Application, HookFn, makeApp } from "@/_lib/Application";
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import { Application, HookFn, makeApp } from '@/_lib/Application';
 
 type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
 
@@ -10,7 +11,7 @@ type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn
 };
 
 type Context<T extends Record<string | symbol, any>> = {
-  app: Omit<Application, "start">;
+  app: Omit<Application, 'start'>;
   bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
@@ -21,7 +22,7 @@ type ContextProvider<T extends Record<string | symbol, any>> = {
 
 type ContextOptions = {
   shutdownTimeout: number;
-  logger: Pick<Console, "info" | "error" | "warn">;
+  logger: Pick<Console, 'info' | 'error' | 'warn'>;
 };
 
 const defaultOptions: ContextOptions = {
@@ -34,14 +35,14 @@ const makeContext = <T extends Record<string | symbol, any>>(
   opts: Partial<ContextOptions> = {}
 ): ContextProvider<T> => {
   const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
-  const moduleKey = Symbol();
+  const moduleKey = Symbol('Context');
 
   const app = makeApp({ shutdownTimeout, logger });
 
   const bootstrap = async <M extends Module<T>[]>(...modules: M): Promise<void> => {
-    if (!modules.every((module) => module[moduleKey])) {
-      const foreignModules = modules.filter((module) => !module[moduleKey]).map((module) => module.name);
-      throw new Error(`Foreign module(s) provided for bootstrap function: ${foreignModules.join(", ")}`);
+    if (!modules.every(module => module[moduleKey])) {
+      const foreignModules = modules.filter(module => !module[moduleKey]).map(module => module.name);
+      throw new Error(`Foreign module(s) provided for bootstrap function: ${foreignModules.join(', ')}`);
     }
 
     const bootOrder = modules.map(({ name, fn }) => async () => {
@@ -53,14 +54,14 @@ const makeContext = <T extends Record<string | symbol, any>>(
           app: app.decorateHooks((lifecycle, fn) => async () => {
             const isArray = Array.isArray(fn);
 
-            logger.info(`Running ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`);
+            logger.info(`Running ${lifecycle.toLowerCase()} hook${isArray ? 's' : ''} from ${name} module.`);
 
             return (Array.isArray(fn) ? fn : [fn]).reduce(
               (chain, hook) =>
                 chain.then(() =>
-                  hook().catch((err) => {
+                  hook().catch(err => {
                     logger.error(
-                      `Error while performing ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`
+                      `Error while performing ${lifecycle.toLowerCase()} hook${isArray ? 's' : ''} from ${name} module.`
                     );
                     logger.error(err);
                   })
@@ -71,15 +72,15 @@ const makeContext = <T extends Record<string | symbol, any>>(
         })
       );
 
-      if (typeof result === "function") {
+      if (typeof result === 'function') {
         app.onDisposing(async () => {
           logger.info(`Disposing ${name} module.`);
 
-          return result().catch((err) => {
+          return result().catch(err => {
             logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
             logger.error(err);
           });
-        }, "prepend");
+        }, 'prepend');
       }
     });
 

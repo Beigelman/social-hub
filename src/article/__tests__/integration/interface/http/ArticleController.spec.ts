@@ -1,7 +1,8 @@
-import { randomBytes } from "crypto";
-import { makeTestControls, TestControls } from "@/__tests__/TestControls";
+import { randomBytes } from 'crypto';
 
-describe("ArticleController", () => {
+import { makeTestControls, TestControls } from '@/__tests__/TestControls';
+
+describe('ArticleController', () => {
   let controls: TestControls;
 
   beforeAll(async () => {
@@ -20,25 +21,25 @@ describe("ArticleController", () => {
     await cleanUp();
   });
 
-  describe("POST /api/articles", () => {
-    it("should create a new Article", async () => {
+  describe('POST /api/articles', () => {
+    it('should create a new Article', async () => {
       const {
         request,
         registry: { articleRepository },
       } = controls;
 
-      const title = randomBytes(20).toString("hex");
-      const content = "New Article content";
+      const title = randomBytes(20).toString('hex');
+      const content = 'New Article content';
 
       return request()
-        .post("/api/articles")
+        .post('/api/articles')
         .send({
           title,
           content,
         })
-        .expect(async (res) => {
+        .expect(async res => {
           expect(res.status).toBe(201);
-          expect(res.body).toHaveProperty("id");
+          expect(res.body).toHaveProperty('id');
 
           const article = await articleRepository.findById(res.body.id);
 
@@ -51,28 +52,28 @@ describe("ArticleController", () => {
         });
     });
 
-    it("should fail with 422 when no title is present", async () => {
+    it('should fail with 422 when no title is present', async () => {
       const { request } = controls;
 
       return request()
-        .post("/api/articles")
+        .post('/api/articles')
         .send({
-          content: "New Article content",
+          content: 'New Article content',
         })
-        .expect((res) => {
+        .expect(res => {
           expect(res.status).toBe(422);
         });
     });
 
-    it("should fail with 422 when no content is present", async () => {
+    it('should fail with 422 when no content is present', async () => {
       const { request } = controls;
 
       return request()
-        .post("/api/articles")
+        .post('/api/articles')
         .send({
-          title: randomBytes(20).toString("hex"),
+          title: randomBytes(20).toString('hex'),
         })
-        .expect((res) => {
+        .expect(res => {
           expect(res.status).toBe(422);
         });
     });

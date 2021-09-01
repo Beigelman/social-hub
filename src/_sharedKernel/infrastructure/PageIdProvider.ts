@@ -1,6 +1,7 @@
-import { makeIdProvider } from "@/_lib/IdProvider";
-import { PageId } from "../domain/PageId";
+import { makeIdProvider } from '@/_lib/IdProvider';
 
-const PageIdProvider = makeIdProvider<PageId>("PageId");
+import { PageId } from '../domain/PageId';
+
+const PageIdProvider = makeIdProvider<PageId>('PageId');
 
 export { PageIdProvider };

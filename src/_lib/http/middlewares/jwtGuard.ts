@@ -1,5 +1,6 @@
-import jwt from "express-jwt";
-import { NextFunction, Request, RequestHandler, Response } from "express";
+/* eslint-disable consistent-return */
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import jwt from 'express-jwt';
 
 type GuardExceptions = {
   method: string;
@@ -17,22 +18,22 @@ const jwtGuard = (options: JwtGuardProps): RequestHandler[] => {
   const { secretKey, exceptions, credentialsRequired, getToken } = options;
 
   if (!secretKey) {
-    throw new Error("secretKey must be supplied");
+    throw new Error('secretKey must be supplied');
   }
 
   const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     if (exceptions) {
-      if (exceptions.some((ex) => req.path.match(ex.match) && req.method === ex.method)) {
+      if (exceptions.some(ex => req.path.match(ex.match) && req.method === ex.method)) {
         return next();
       }
     }
 
     jwt({
-      algorithms: ["RS256", "HS256"],
+      algorithms: ['RS256', 'HS256'],
       secret: secretKey,
       credentialsRequired,
       getToken,
-      requestProperty: "accessToken",
+      requestProperty: 'accessToken',
     })(req, res, next);
   };
 

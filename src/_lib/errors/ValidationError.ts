@@ -1,10 +1,11 @@
-import Joi from "types-joi";
-import { BaseError, Exception } from "@/_lib/errors/BaseError";
-import { makePredicate } from "@/_lib/Predicate";
+import Joi from 'types-joi';
+
+import { BaseError, Exception } from '@/_lib/errors/BaseError';
+import { makePredicate } from '@/_lib/Predicate';
 
 namespace ValidationError {
-  const type = Symbol();
-  const code = "ValidationError";
+  const type = Symbol('Validation Error');
+  const code = 'ValidationError';
 
   type Props = {
     readonly target: string;
@@ -12,7 +13,12 @@ namespace ValidationError {
   };
 
   export const create = ({ error, target }: Props): Exception<Props> =>
-    new BaseError<Props>({ type, code, message: error.message, meta: { target, error } });
+    new BaseError<Props>({
+      type,
+      code,
+      message: error.message,
+      meta: { target, error },
+    });
 
   export const is = makePredicate<Exception<Props>>(type);
 }

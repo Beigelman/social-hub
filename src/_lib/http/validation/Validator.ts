@@ -1,7 +1,8 @@
-import * as Joi from "types-joi";
-import { Request } from "express";
-import { InterfaceFrom } from "types-joi";
-import { ValidationError } from "@/_lib/errors/ValidationError";
+import { Request } from 'express';
+import * as Joi from 'types-joi';
+import { InterfaceFrom } from 'types-joi';
+
+import { ValidationError } from '@/_lib/errors/ValidationError';
 
 type ValidationSchemas = {
   body?: Joi.BaseSchema<any>;
@@ -14,11 +15,11 @@ type ValidationSchemas = {
 type ValidationType<T> = T extends Joi.BaseSchema<any> ? InterfaceFrom<NonNullable<T>> : any;
 
 type ValidationHelpers<T extends ValidationSchemas> = {
-  getBody(req: Request): ValidationType<T["body"]>;
-  getParams(req: Request): ValidationType<T["params"]>;
-  getQuery(req: Request): ValidationType<T["query"]>;
-  getCookies(req: Request): ValidationType<T["cookies"]>;
-  getHeaders(req: Request): ValidationType<T["headers"]>;
+  getBody(req: Request): ValidationType<T['body']>;
+  getParams(req: Request): ValidationType<T['params']>;
+  getQuery(req: Request): ValidationType<T['query']>;
+  getCookies(req: Request): ValidationType<T['cookies']>;
+  getHeaders(req: Request): ValidationType<T['headers']>;
 };
 
 const makeValidator = <T extends ValidationSchemas>(schemas: T): ValidationHelpers<typeof schemas> => {
@@ -37,11 +38,11 @@ const makeValidator = <T extends ValidationSchemas>(schemas: T): ValidationHelpe
   };
 
   return {
-    getBody: createValidator("body"),
-    getParams: createValidator("params"),
-    getQuery: createValidator("query"),
-    getHeaders: createValidator("headers"),
-    getCookies: createValidator("cookies"),
+    getBody: createValidator('body'),
+    getParams: createValidator('params'),
+    getQuery: createValidator('query'),
+    getHeaders: createValidator('headers'),
+    getCookies: createValidator('cookies'),
   };
 };
 

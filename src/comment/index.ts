@@ -1,14 +1,15 @@
-import { CreateComment, makeCreateComment } from "@/comment/application/useCases/CreateComment";
-import { CommentRepository } from "@/comment/domain/CommentRepository";
-import { CommentCollection, initCommentCollection } from "@/comment/infrastructure/CommentCollection";
-import { makeMongoCommentRepository } from "@/comment/infrastructure/MongoCommentRepository";
-import { makeCommentController } from "@/comment/interface/http/commentController";
-import { makeModule } from "@/context";
-import { withMongoProvider } from "@/_lib/MongoProvider";
-import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
-import { asFunction } from "awilix";
+import { asFunction } from 'awilix';
 
-const commentModule = makeModule("comment", async ({ container: { register, build } }) => {
+import { withMongoProvider } from '@/_lib/MongoProvider';
+import { toContainerValues } from '@/_lib/wrappers/toContainerFunctions';
+import { CreateComment, makeCreateComment } from '@/comment/application/useCases/CreateComment';
+import { CommentRepository } from '@/comment/domain/CommentRepository';
+import { CommentCollection, initCommentCollection } from '@/comment/infrastructure/CommentCollection';
+import { makeMongoCommentRepository } from '@/comment/infrastructure/MongoCommentRepository';
+import { makeCommentController } from '@/comment/interface/http/commentController';
+import { makeModule } from '@/context';
+
+const commentModule = makeModule('comment', async ({ container: { register, build } }) => {
   const collections = await build(
     withMongoProvider({
       commentCollection: initCommentCollection,
