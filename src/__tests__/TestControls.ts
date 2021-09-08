@@ -1,8 +1,9 @@
-import { Container, container } from "@/container";
-import { withContext } from "@/context";
-import { main } from "@/_boot";
-import { Db } from "mongodb";
-import supertest, { SuperTest, Test } from "supertest";
+import { Db } from 'mongodb';
+import supertest, { SuperTest, Test } from 'supertest';
+
+import { main } from '@/_boot';
+import { Container, container } from '@/container';
+import { withContext } from '@/context';
 
 type Dependencies = {
   mongo: Db;
@@ -13,12 +14,12 @@ type TestControls = Readonly<{
   clearDatabase: () => Promise<void>;
   cleanUp: () => Promise<void>;
   container: Container;
-  registry: Container["cradle"];
+  registry: Container['cradle'];
 }>;
 
 const appRunning = withContext(
   ({ app: { onRunning } }) =>
-    new Promise<void>((resolve) => {
+    new Promise<void>(resolve => {
       onRunning(async () => {
         resolve();
       });
@@ -32,7 +33,7 @@ const makeClearDatabase =
   async (): Promise<void> => {
     const collections = await mongo.collections();
 
-    await Promise.all(collections.map((collection) => collection.deleteMany({})));
+    await Promise.all(collections.map(collection => collection.deleteMany({})));
   };
 
 const makeTestControls = async (): Promise<TestControls> => {

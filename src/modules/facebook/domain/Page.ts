@@ -22,9 +22,16 @@ namespace Page {
     zip?: string;
   }>;
 
+  export type Attributes = {
+    hasDelivery?: boolean;
+    hasInStorePickup?: boolean;
+    hasOnlineOfferings?: boolean;
+  };
+
   type Page = AggregateRoot<PageId> &
     Readonly<{
       address?: Address;
+      attributes: Attributes;
       description?: string;
       hours?: Hour[];
       name: string;
@@ -39,9 +46,10 @@ namespace Page {
       version: number;
     }>;
 
-  type PageProps = Readonly<{
+  export type PageProps = Readonly<{
     id: PageId;
     address?: Address;
+    attributes: Attributes;
     description?: string;
     hours?: Hour[];
     name: string;
@@ -61,6 +69,7 @@ namespace Page {
     (props: PageProps): Page => ({
       id: props.id,
       address: props.address,
+      attributes: props.attributes,
       description: props.description,
       hours: props.hours,
       name: props.name,

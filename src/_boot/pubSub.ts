@@ -1,10 +1,11 @@
-import { makeModule } from "@/context";
-import { makeEventEmitterPubSub } from "@/_lib/pubSub/EventEmitterPubSub";
-import { asValue } from "awilix";
-import { Subscriber } from "@/_lib/events/Subscriber";
-import { Publisher } from "@/_lib/events/Publisher";
+import { asValue } from 'awilix';
 
-const pubSub = makeModule("pubSub", async ({ container: { build, register }, app: { onReady } }) => {
+import { Publisher } from '@/_lib/events/Publisher';
+import { Subscriber } from '@/_lib/events/Subscriber';
+import { makeEventEmitterPubSub } from '@/_lib/pubSub/EventEmitterPubSub';
+import { makeModule } from '@/context';
+
+const pubSub = makeModule('pubSub', async ({ container: { build, register }, app: { onReady } }) => {
   const eventEmitterPubSub = build(makeEventEmitterPubSub);
 
   register({

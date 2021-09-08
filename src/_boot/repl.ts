@@ -1,7 +1,8 @@
-import REPL, { REPLEval, ReplOptions, REPLServer } from "repl";
-import vm from "vm";
-import { createServer, Server } from "net";
-import { makeModule } from "@/context";
+import { createServer, Server } from 'net';
+import REPL, { REPLEval, ReplOptions, REPLServer } from 'repl';
+import vm from 'vm';
+
+import { makeModule } from '@/context';
 
 type REPLConfig = {
   appName: string;
@@ -12,9 +13,9 @@ type REPLConfig = {
 };
 
 const repl = makeModule(
-  "repl",
+  'repl',
   async ({
-    app: { onReady, terminate},
+    app: { onReady, terminate },
     container,
     config: {
       appName,
@@ -24,17 +25,17 @@ const repl = makeModule(
     },
     logger,
   }) => {
+    const isPromise = value => value && typeof value.then === 'function' && typeof value.catch === 'function';
+
     const promisableEval: REPLEval = (cmd, context, filename, callback) => {
       const result = vm.runInContext(cmd, context);
 
       if (isPromise(result)) {
-        return result.then((v) => callback(null, v)).catch((e) => callback(e, null));
+        return result.then(v => callback(null, v)).catch(e => callback(e, null));
       }
 
       return callback(null, result);
     };
-
-    const isPromise = (value) => value && typeof value.then === "function" && typeof value.catch === "function";
 
     const createREPL = (
       config: Partial<ReplOptions> = { input: process.stdin, output: process.stdout }
@@ -57,21 +58,21 @@ const repl = makeModule(
       if (cli) {
         const repl = createREPL();
 
-        repl.on("close", terminate);
-      } else if (!["production", "test"].includes(environment)) {
-        server = createServer((socket) => {
+        repl.on('close', terminate);
+      } else if (!['production', 'test'].includes(environment)) {
+        server = createServer(socket => {
           const repl = createREPL({
             input: socket,
             output: socket,
             terminal: true,
           });
 
-          repl.on("close", () => {
+          repl.on('close', () => {
             socket.end();
           });
 
-          socket.on("error", (err) => {
-            logger.error("[REPL] Connection error");
+          socket.on('error', err => {
+            logger.error('[REPL] Connection error');
             logger.error(err);
             socket.end();
           });
@@ -84,7 +85,7 @@ const repl = makeModule(
     return async () => {
       if (server && server.listening) {
         await new Promise<void>((resolve, reject) =>
-          server.close((err) => {
+          server.close(err => {
             if (err) return reject(err);
             resolve();
           })

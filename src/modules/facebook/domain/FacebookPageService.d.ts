@@ -5,8 +5,10 @@ type GetPageDTO = Readonly<{
   pageId: string;
 }>;
 
-type FBPageInfo = Omit<Page.Type, 'id'>;
+type FBPageInfo = Omit<Page.PageProps, 'id'>;
 
 type FacebookPageService = {
   getPageInfo(payload: GetPageDTO): Promise<FBPageInfo>;
 };
+
+export { FacebookPageService, FBPageInfo, GetPageDTO };

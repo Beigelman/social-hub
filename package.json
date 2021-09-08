@@ -5,9 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "awilix": "^4.3.4",
+    "axios": "^0.21.1",
+    "axios-mock-adapter": "^1.20.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
     "express-jwt": "^6.1.0",
+    "graphql": "^15.5.3",
+    "graphql-tools": "^8.2.0",
     "joi": "^17.4.1",
     "lodash": "^4.17.21",
     "lodash.template": "^4.5.0",
@@ -60,29 +65,7 @@
     "build": "tsc",
     "dev": "tsnd --transpile-only --inspect --files src/index.ts | pino-pretty -c -l",
     "cli": "tsnd --transpile-only --files src/index.ts --cli",
-    "remote": "ts-node bin/replClient.ts"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": ".",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "coverage",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "<rootDir>/src/**"
-    ],
-    "testRegex": "(/__tests__/.*(test|spec))\\.[jt]sx?$",
-    "moduleNameMapper": {
-      "@/(.*)": "<rootDir>/src/$1"
-    },
-    "setupFiles": [
-      "./src/__tests__/setup.ts"
-    ]
+    "remote": "ts-node bin/replClient.ts",
+    "test": "jest"
   }
 }

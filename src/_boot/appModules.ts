@@ -1,14 +1,12 @@
-import { articleModule, ArticleRegistry } from "@/article";
-import { ArticleMessages } from "@/article/messages";
-import { commentModule, CommentRegistry } from "@/comment";
+import { facebookModule, FacebookRegistry } from '@/modules/facebook';
 
-type AppModulesMessages = ArticleMessages;
+type AppModulesMessages = {};
 
 type AppModulesConfig = {};
 
-const appModules = [articleModule, commentModule];
+const appModules = [facebookModule];
 
-type AppModulesRegistry = ArticleRegistry & CommentRegistry;
+type AppModulesRegistry = FacebookRegistry;
 
 export { appModules };
 export type { AppModulesMessages, AppModulesConfig, AppModulesRegistry };

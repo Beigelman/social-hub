@@ -1,0 +1,59 @@
+type Attributes {
+  hasDelivery: Boolean;
+  hasInStorePickup: Boolean;
+  hasOnlineOfferings: Boolean;
+}
+
+enum DayOfWeek {
+  SUNDAY; 
+  MONDAY;
+  TUESDAY;
+  WEDNESDAY; 
+  THURSDAY; 
+  FRIDAY; 
+  SATURDAY;
+}
+
+type Address {
+  city: String;
+  country: String;
+  latitude: Number;
+  longitude: Number;
+  state: String;
+  street: String;
+  zip: String;
+}
+
+type Hour {
+  day: String;
+  dayOfWeek: DayOfWeek;
+  openTime: String;
+  closeTime: String;
+  byAppointmentOnly: Boolean;
+  closed: Boolean;
+}
+
+enum Status {
+  PUBLISHED 
+  NEEDS_UPGRADE 
+  DELETED
+}
+
+type Page {
+  id: String!
+  address: Address
+  attributes: Attributes
+  description: String
+  hours: [Hour!]
+  name: String
+  photos: [String]
+  phone: String
+  profilePhoto: String
+  status: 
+  temporarilyClosed: Boolean;
+  website: String;
+}
+
+type Query {
+  findPages: Page
+}

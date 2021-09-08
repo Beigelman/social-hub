@@ -9,7 +9,13 @@ import { makeMongoPageRepository } from '@/modules/facebook/infrastructure/Mongo
 import { initPageCollection, PageCollection } from '@/modules/facebook/infrastructure/PageCollection';
 import { makePageController } from '@/modules/facebook/interface/http/pageController';
 
-const pageModule = makeModule('article', async ({ container: { register, build } }) => {
+import { FacebookPageService } from './domain/FacebookPageService';
+import { makeHttpFacebookPageService } from './infrastructure/HttpFacebookPageService';
+import { FacebookGQLQueries, makeFacebookGQLQueries } from './interface/graphql';
+import { FindPages } from './query/FindPage';
+import { makeMongoFindPage } from './query/impl/MongoFindPage';
+
+const facebookModule = makeModule('facebook', async ({ container: { register, build } }) => {
   const collections = await build(
     withMongoProvider({
       pageCollection: initPageCollection,
@@ -18,18 +24,24 @@ const pageModule = makeModule('article', async ({ container: { register, build }
 
   register({
     ...toContainerValues(collections),
+    facebookGQLQueries: asFunction(makeFacebookGQLQueries),
+    facebookPageService: asFunction(makeHttpFacebookPageService),
     pageRepository: asFunction(makeMongoPageRepository),
+    findPage: asFunction(makeMongoFindPage),
     connectPage: asFunction(makeConnectPage),
   });
 
   build(makePageController);
 });
 
-type PageRegistry = {
+type FacebookRegistry = {
+  facebookGQLQueries: FacebookGQLQueries;
+  facebookPageService: FacebookPageService;
   pageCollection: PageCollection;
   pageRepository: PageRepository;
   connectPage: ConnectPage;
+  findPage: FindPages;
 };
 
-export { pageModule };
-export type { PageRegistry };
+export { facebookModule };
+export type { FacebookRegistry };

@@ -1,13 +1,16 @@
-import express, { Router, Application, json, urlencoded } from "express";
-import { asValue } from "awilix";
-import httpLogger from "pino-http";
-import { createServer } from "http";
-import { requestId } from "@/_lib/http/middlewares/requestId";
-import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
-import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
-import { makeModule } from "@/context";
-import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
-import { errorConverters } from "@/_sharedKernel/interface/http/ErrorConverters";
+import { asValue } from 'awilix';
+import express, { Router, Application, json, urlencoded } from 'express';
+// import { graphqlHTTP } from 'express-graphql';
+// import { GraphQLSchema } from 'graphql';
+import { createServer } from 'http';
+import httpLogger from 'pino-http';
+
+import { errorHandler } from '@/_lib/http/middlewares/errorHandler';
+import { gracefulShutdown } from '@/_lib/http/middlewares/gracefulShutdown';
+import { requestContainer } from '@/_lib/http/middlewares/requestContainer';
+import { requestId } from '@/_lib/http/middlewares/requestId';
+import { errorConverters } from '@/_sharedKernel/interface/http/ErrorConverters';
+import { makeModule } from '@/context';
 
 type ServerConfig = {
   http: {
@@ -17,48 +20,59 @@ type ServerConfig = {
 };
 
 const server = makeModule(
-  "server",
+  'server',
   async ({ app: { onBooted, onReady }, container, config: { cli, http, environment }, logger }) => {
     const { register } = container;
-    const server = express();
+    const expressServer = express();
 
-    const httpServer = createServer(server);
+    const httpServer = createServer(expressServer);
 
     const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
 
-    server.use(shutdownHandler());
-    server.use(requestId());
-    server.use(requestContainer(container));
-    server.use(httpLogger());
-    server.use(json());
-    server.use(urlencoded({ extended: false }));
+    expressServer.use(shutdownHandler());
+    expressServer.use(requestId());
+    expressServer.use(requestContainer(container));
+    expressServer.use(httpLogger());
+    expressServer.use(json());
+    expressServer.use(urlencoded({ extended: false }));
+
+    // expressServer.use(
+    //   '/graphql',
+    //   graphqlHTTP({
+    //     schema,
+    //     graphiql: process.env.NODE_ENV !== 'production',
+    //   })
+    // );
 
     const rootRouter = Router();
     const apiRouter = Router();
 
-    rootRouter.use("/api", apiRouter);
+    rootRouter.use('/api', apiRouter);
 
-    server.use(rootRouter);
+    expressServer.use(rootRouter);
 
     onBooted(async () => {
-      server.use((req, res) => {
+      expressServer.use((req, res) => {
         res.sendStatus(404);
       });
 
-      server.use(errorHandler(errorConverters, { logger }));
+      expressServer.use(errorHandler(errorConverters, { logger }));
     });
 
-    if (!cli && environment !== "test") {
-      onReady(async () => new Promise<void>(resolve => {
-        httpServer.listen(http.port, http.host, () => {
-          logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
-          resolve();
-        });
-      }));
+    if (!cli && environment !== 'test') {
+      onReady(
+        async () =>
+          new Promise<void>(resolve => {
+            httpServer.listen(http.port, http.host, () => {
+              logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
+              resolve();
+            });
+          })
+      );
     }
 
     register({
-      server: asValue(server),
+      server: asValue(expressServer),
       rootRouter: asValue(rootRouter),
       apiRouter: asValue(apiRouter),
     });

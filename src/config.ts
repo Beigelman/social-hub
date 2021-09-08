@@ -8,7 +8,7 @@ import { environment, EnvironmentConfig, envNumber, envString } from '@/_lib/Env
 type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig & AppModulesConfig;
 
 const config: Configuration = {
-  appName: 'node-arch',
+  appName: 'Social Hub',
   cli: process.argv.includes('--cli'),
   environment: environment(),
   repl: {
@@ -19,16 +19,16 @@ const config: Configuration = {
     port: envNumber('PORT', 3000),
   },
   swagger: {
-    title: 'Blog API',
+    title: 'Social Hub Api',
     version: '1.0.0',
     basePath: '/api',
     docEndpoint: '/api-docs',
   },
   mongodb: {
-    database: envString('DB_NAME', 'blog'),
+    database: envString('DB_NAME', 'social-hub'),
     host: envString('DB_HOST', 'mongodb://localhost:27017'),
-    username: envString('DB_USER', 'blog'),
-    password: envString('DB_PASS', 'blog'),
+    username: envString('DB_USER', 'social-hub'),
+    password: envString('DB_PASS', 'social-platform'),
   },
 };
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Application, HookFn, makeApp } from '@/_lib/Application';
 
 type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
@@ -39,7 +38,13 @@ const makeContext = <T extends Record<string | symbol, any>>(
 
   const app = makeApp({ shutdownTimeout, logger });
 
-  const bootstrap = async <M extends Module<T>[]>(...modules: M): Promise<void> => {
+  const context: Context<T> = {
+    ...localContext,
+    app,
+    bootstrap,
+  };
+
+  async function bootstrap<M extends Module<T>[]>(...modules: M): Promise<void> {
     if (!modules.every(module => module[moduleKey])) {
       const foreignModules = modules.filter(module => !module[moduleKey]).map(module => module.name);
       throw new Error(`Foreign module(s) provided for bootstrap function: ${foreignModules.join(', ')}`);
@@ -87,13 +92,7 @@ const makeContext = <T extends Record<string | symbol, any>>(
     app.onBooting(bootOrder);
 
     return app.start();
-  };
-
-  const context: Context<T> = {
-    ...localContext,
-    app,
-    bootstrap,
-  };
+  }
 
   return {
     makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F): M =>

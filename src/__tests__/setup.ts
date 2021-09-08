@@ -1,4 +1,5 @@
-process.env.NODE_ENV = "test";
+/* eslint-disable no-global-assign */
+process.env.NODE_ENV = 'test';
 
 const catchAll = new Proxy(
   {},
@@ -7,10 +8,8 @@ const catchAll = new Proxy(
       return jest.fn().mockReturnValue(catchAll);
     },
   }
-)
+);
 
-jest.mock(
-  "pino",
-  () => () => catchAll);
+jest.mock('pino', () => () => catchAll);
 
 console = catchAll;

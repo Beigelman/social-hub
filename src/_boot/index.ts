@@ -1,14 +1,15 @@
-import { server } from "@/_boot/server";
-import { appModules } from "@/_boot/appModules";
-import { asValue } from "awilix";
-import { database } from "@/_boot/database";
-import { repl } from "@/_boot/repl";
-import { withContext } from "@/context";
-import { Configuration } from "@/config";
-import { Logger } from "pino";
-import { pubSub } from "@/_boot/pubSub";
-import { MessageBundle } from "@/messages";
+import { asValue } from 'awilix';
+import { Logger } from 'pino';
+
+import { appModules } from '@/_boot/appModules';
+import { database } from '@/_boot/database';
+import { pubSub } from '@/_boot/pubSub';
+import { repl } from '@/_boot/repl';
+import { server } from '@/_boot/server';
 import { swagger } from '@/_boot/swagger';
+import { Configuration } from '@/config';
+import { withContext } from '@/context';
+import { MessageBundle } from '@/messages';
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({
