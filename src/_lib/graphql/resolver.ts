@@ -1,12 +1,25 @@
-type ResolverBody = {
-  Query?: {
-    [key: string]: any;
-  };
-  Mutation?: {
-    [key: string]: any;
-  };
+type ModuleData = {
+  queries: any;
+  mutations: any;
+}
+
+const makeSchemaStorage = () => {
+  let queries = {};
+  let mutations = {};
+
+  return {
+    getModuleData: () => ({ queries, mutations }),
+    registerModule: (moduleData: ModuleData) => {
+      queries = { ...queries, ...moduleData.queries };
+      mutations = { ...mutations, ...moduleData.mutations };
+    }
+  }
 };
 
-type Resolver = (resolverProps: any) => ResolverBody;
+type Dependencies = {
+  registerModule: (moduleData: ModuleData) => void;
+}
 
-export { Resolver };
+const withModuleRegister = (moduleData: ModuleData) => ({ registerModule }: Dependencies) => registerModule(moduleData)
+
+export { makeSchemaStorage, withModuleRegister };

@@ -36,14 +36,6 @@ const server = makeModule(
     expressServer.use(json());
     expressServer.use(urlencoded({ extended: false }));
 
-    // expressServer.use(
-    //   '/graphql',
-    //   graphqlHTTP({
-    //     schema,
-    //     graphiql: process.env.NODE_ENV !== 'production',
-    //   })
-    // );
-
     const rootRouter = Router();
     const apiRouter = Router();
 

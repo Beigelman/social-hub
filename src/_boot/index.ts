@@ -10,6 +10,7 @@ import { swagger } from '@/_boot/swagger';
 import { Configuration } from '@/config';
 import { withContext } from '@/context';
 import { MessageBundle } from '@/messages';
+import { graphql } from '@/_boot/graphql';
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({
@@ -20,7 +21,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger, mes
     config: asValue(config),
   });
 
-  await bootstrap(database, server, swagger, pubSub, repl, ...appModules);
+  await bootstrap(database, server, graphql, swagger, pubSub, repl, ...appModules);
 });
 
 type MainRegistry = {

@@ -14,6 +14,7 @@ import { makeHttpFacebookPageService } from './infrastructure/HttpFacebookPageSe
 import { FacebookGQLQueries, makeFacebookGQLQueries } from './interface/graphql';
 import { FindPages } from './query/FindPage';
 import { makeMongoFindPage } from './query/impl/MongoFindPage';
+import { withModuleRegister } from '@/_lib/graphql/resolver';
 
 const facebookModule = makeModule('facebook', async ({ container: { register, build } }) => {
   const collections = await build(
@@ -30,6 +31,13 @@ const facebookModule = makeModule('facebook', async ({ container: { register, bu
     findPage: asFunction(makeMongoFindPage),
     connectPage: asFunction(makeConnectPage),
   });
+
+  build(
+    withModuleRegister({
+      queries: build(makeFacebookGQLQueries),
+      mutations: {},
+    })
+  );
 
   build(makePageController);
 });
